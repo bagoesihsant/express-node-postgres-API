@@ -1,17 +1,20 @@
 // Import Modules
 import express from 'express';
 
+// Import Middlewares
+import * as controller from '../controllers/posts.js';
+
 // Constants
 const router = express.Router();
 
 // Middlewares
 
 // Routes
-router.get('/', (req, res) => { res.status(200).send('Hello World! Posts'); });
-router.get('/:id', (req, res) => { const { id } = req.params; res.status(200).send(`Hello World!! ${id} Posts`); });
-router.post('/', (req, res) => { res.status(200).send('Hello POST World!! Posts'); });
-router.put('/:id', (req, res) => { const { id } = req.params; res.status(200).send(`Hello PUT World!! ${id} Posts`); });
-router.delete('/:id', (req, res) => { const { id } = req.params; res.status(200).send(`Hello DELETE World!! ${id} Posts`); });
+router.get('/', controller.getPosts);
+router.get('/:id', controller.getPost);
+router.post('/', controller.addPost);
+router.put('/:id', controller.updatePost);
+router.delete('/:id', controller.deletePost);
 
 // Export Router
 export { router };

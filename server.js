@@ -9,7 +9,7 @@ import { router as postsRouter } from './routes/posts.js';
 const PORT = 8080;
 const app = express();
 
-// Sample Routes
+// Routes
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 
