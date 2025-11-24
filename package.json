@@ -1,0 +1,29 @@
+{
+  "name": "express-node-postgres-api",
+  "version": "1.0.0",
+  "description": "An API created using Express.js and Node-Postgres modules.",
+  "keywords": [
+    "Express.js",
+    "Node-Postgres",
+    "API"
+  ],
+  "homepage": "https://github.com/bagoesihsant/express-node-postgres-API#readme",
+  "bugs": {
+    "url": "https://github.com/bagoesihsant/express-node-postgres-API/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bagoesihsant/express-node-postgres-API.git"
+  },
+  "license": "MIT",
+  "author": "Bagoes Ihsan Taufiqurrahman",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.16.3"
+  }
+}
