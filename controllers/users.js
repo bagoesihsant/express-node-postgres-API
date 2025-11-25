@@ -1,13 +1,35 @@
 // Import Modules
 
+// Import Models
+import * as usersModel from '../models/users.js';
+
 /**
  * Get all users from database
  * @param {*} req 
  * @param {*} res 
  * @param {*} next 
  */
-function getUsers(req, res, next){
-    res.status(200).send('Hello World!! Users!');
+async function getUsers(req, res, next){
+    try {
+        const users = await usersModel.getAllUsers();
+
+        if (users.rowCount < 1) {
+            res.status(200).json({
+                status: 200,
+                message: 'No data found.',
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully fetching data.',
+            data: users.rows,
+        });
+
+    } catch (error) {
+        console.error('Controller Error', error.message);
+    }
 }
 
 /**
@@ -16,10 +38,29 @@ function getUsers(req, res, next){
  * @param {*} res 
  * @param {*} next 
  */
-function getUser(req, res, next){
-    const { id } = req.params;
+async function getUser(req, res, next){
+    try {
+        const { id } = req.params;
 
-    res.status(200).send(`Hello World!! ${id}! Users!`);
+        const user = await usersModel.getUserById(id);
+
+        if (user.rowCount < 1){
+            res.status(200).json({
+                status: 200,
+                message: 'No data found.',
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully fetching data.',
+            data: user.rows,
+        });
+
+    } catch (error) {
+        console.error('Controller Error', error.message);
+    }
 }
 
 /**

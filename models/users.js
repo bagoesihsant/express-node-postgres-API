@@ -1,50 +1,17 @@
 // Import Modules
-
-// Sample Data
-const sampleData = [
-    {
-        id: 1,
-        first_name: 'Dean',
-        last_name: 'Martin',
-        email: 'deanmartin@mail.com',
-        created_at: '2025-11-23 09:00:00'
-    },
-    {
-        id: 2,
-        first_name: 'Martin',
-        last_name: 'Luther',
-        email: 'martinluther@mail.com',
-        created_at: '2025-11-13 09:00:00'
-    },
-    {
-        id: 3,
-        first_name: 'Michael',
-        last_name: 'Jackson',
-        email: 'michaeljack@mail.com',
-        created_at: '2025-11-12 09:00:00'
-    },
-    {
-        id: 4,
-        first_name: 'Rick',
-        last_name: 'Astley',
-        email: 'rickastley@mail.com',
-        created_at: '2025-11-11 09:00:00'
-    },
-    {
-        id: 5,
-        first_name: 'Frank',
-        last_name: 'Sinatra',
-        email: 'franksinatra@mail.com',
-        created_at: '2025-11-10 09:00:00'
-    }
-];
+import * as dbHelper from '../databases/helper.js';
 
 /**
  * Get all users data from database
  * @returns { JSON } arrays of objects containing users data
  */
-function getAllUsers(){
-    return sampleData;
+async function getAllUsers(){
+    try {
+        const result = await dbHelper.query('SELECT * FROM users ORDER BY users.id ASC');
+        return result;
+    } catch (error) {
+        console.error("Model Error", error.message);
+    }
 }
 
 /**
@@ -52,9 +19,16 @@ function getAllUsers(){
  * @param { integer } id 
  * @returns { JSON } object containing user data
  */
-function getUserById(id){
-    const user = sampleData.find(user => user.id === id);
-    return user;
+async function getUserById(id){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'SELECT * FROM users WHERE users.id = $1 ORDER BY users.id ASC',
+            [id]
+        );
+        return result;
+    } catch (error) {
+        console.error("Model Error", error.message);
+    }
 }
 
 /**
@@ -90,3 +64,5 @@ function deleteUser(id){
     const filterUser = sampleData.find(user => user.id === id);
     return filterUser.id;
 }
+
+export { getAllUsers, getUserById, addUser, updateUser, deleteUser };

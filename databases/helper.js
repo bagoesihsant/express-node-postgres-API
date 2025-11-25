@@ -24,7 +24,6 @@ async function query(query){
             const finishTime = Date.now() - startTime;
 
             // Log in System
-            console.log('Result', result);
             console.log('Executed Query', { duration: `${finishTime}ms`, rowCount: result.rowCount });
 
             // Return Query Result
@@ -33,7 +32,7 @@ async function query(query){
             console.error("Query Error", error.message);
         } finally {
             // Release Client after finishing query
-            client.release();
+            await client.release();
         }
 
     } catch (error) {
@@ -64,7 +63,6 @@ async function parameterizedQuery(query, params){
             const finishTime = Date.now() - startTime;
 
             // Log in System
-            console.log('Result', result);
             console.log('Executed Query', { duration: `${finishTime}ms`, rowCount: result.rowCount });
 
             // Return Query Result
@@ -73,7 +71,7 @@ async function parameterizedQuery(query, params){
             console.error('Query Error', error.message);
         } finally {
             // Release Client after finishing query
-            client.release();
+            await client.release();
         }
     } catch (error) {
         console.error("Connection Error", error.message);
