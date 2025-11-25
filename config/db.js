@@ -20,7 +20,7 @@ const dbCredentials = {
     port: process.env.PG_PORT,
     database: process.env.PG_DATABASE,
 };
-const dbPool = Pool(dbCredentials);
+const dbPool = new Pool(dbCredentials);
 
 // Export DB Pool
 export { dbPool };
