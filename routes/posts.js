@@ -8,6 +8,7 @@ import * as controller from '../controllers/posts.js';
 const router = express.Router();
 
 // Middlewares
+router.use(express.json());
 
 // Routes
 router.get('/', controller.getPosts);

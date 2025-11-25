@@ -1,50 +1,18 @@
 // Import Modules
+import * as dbHelper from '../databases/helper.js';
 
-// Sample Data
-const sampleData = [
-    {
-        id: 1,
-        title: 'Lord of the Ring',
-        content: 'lorem ipsum dolor sit amet',
-        created_at: '2025-11-22 09:00:00',
-        updated_at: '2025-11-23 09:00:00'
-    },
-    {
-        id: 2,
-        title: 'The Witcher: Last Wish',
-        content: 'lorem ipsum dolor sit amet',
-        created_at: '2025-11-11 09:00:00',
-        updated_at: '2025-11-18 09:00:00'
-    },
-    {
-        id: 3,
-        title: 'Dispatch',
-        content: 'lorem ipsum dolor sit amet',
-        created_at: '2025-11-12 09:00:00',
-        updated_at: '2025-11-14 09:00:00'
-    },
-    {
-        id: 4,
-        title: 'The Witcher: Sword of Destiny',
-        content: 'lorem ipsum dolor sit amet',
-        created_at: '2025-11-14 09:00:00',
-        updated_at: '2025-11-16 09:00:00'
-    },
-    {
-        id: 5,
-        title: 'The Witcher: Blood of Elves',
-        content: 'lorem ipsum dolor sit amet',
-        created_at: '2025-11-09 09:00:00',
-        updated_at: '2025-11-23 09:00:00'
-    }
-];
 
 /**
  * Get all posts data from database
  * @returns { JSON } arrays of objects containing posts data
  */
-function getAllPosts(){
-    return sampleData;
+async function getAllPosts(){
+    try {
+        const result = await dbHelper.query('SELECT * FROM posts ORDER BY posts.id ASC');
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message);
+    }
 }
 
 /**
@@ -52,9 +20,16 @@ function getAllPosts(){
  * @param { integer } id 
  * @returns { JSON } object containing post data
  */
-function getPostById(id){
-    const post = sampleData.find(post => post.id === id);
-    return post;
+async function getPostById(id){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'SELECT * FROM posts WHERE posts.id = $1 ORDER BY posts.id ASC',
+            [id]
+        );
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message);
+    }
 }
 
 /**
@@ -63,8 +38,16 @@ function getPostById(id){
  * @param { string } content 
  * @returns { integer } inserted row id
  */
-function addPost(title, content){
-    return 1;
+async function addPost(title, content){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'INSERT INTO posts (title, content) VALUES ($1, $2)',
+            [title, content]
+        );
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message);
+    }
 }
 
 /**
@@ -88,3 +71,5 @@ function deletePost(id){
     const filterPost = sampleData.find(post => post.id === id);
     return filterPost.id;
 }
+
+export { getAllPosts, getPostById, addPost, updatePost, deletePost };
