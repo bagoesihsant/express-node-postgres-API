@@ -8,6 +8,7 @@ import * as controller from '../controllers/users.js';
 const router = express.Router();
 
 // Middlewares
+router.use(express.json());
 
 // Routes
 router.get('/', controller.getUsers);

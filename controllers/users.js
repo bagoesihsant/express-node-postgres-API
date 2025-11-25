@@ -69,8 +69,29 @@ async function getUser(req, res, next){
  * @param {*} res 
  * @param {*} next 
  */
-function addUser(req, res, next){
-    res.status(200).send('Hello World!! POST! Users!');
+async function addUser(req, res, next){
+    try {
+
+        const { first_name, last_name, email } = req.body;
+
+        const result = await usersModel.addUser(first_name, last_name, email);
+
+        if (result.rowCount < 1){
+            res.status(200).json({
+                status: 200,
+                message: 'No data inserted',
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully inserting data.',
+        });
+
+    } catch (error) {
+        console.error('Controller Error', error.message);
+    }
 }
 
 /**
@@ -79,10 +100,29 @@ function addUser(req, res, next){
  * @param {*} res 
  * @param {*} next 
  */
-function updateUser(req, res, next){
-    const { id } = req.params;
-    
-    res.status(200).send(`Hello World!! PUT! ${id}! Users!`);
+async function updateUser(req, res, next){
+    try {
+        const { id } = req.params;
+
+        const { first_name, last_name, email } = req.body;
+
+        const result = await usersModel.updateUser(id, first_name, last_name, email);
+
+        if (result.rowCount < 1){
+            res.status(200).json({
+                status: 200,
+                message: 'No data updated',
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully updating data.',
+        });
+    } catch (error) {
+        console.error('Controller Error', error.message);
+    }
 }
 
 /**
@@ -91,10 +131,28 @@ function updateUser(req, res, next){
  * @param {*} res 
  * @param {*} next 
  */
-function deleteUser(req, res, next){
-    const { id } = req.params;
+async function deleteUser(req, res, next){
+    try {
+        const { id } = req.params;
 
-    res.status(200).send(`Hello World!! DELETE! ${id}! Users!`);
+        const result = await usersModel.deleteUser(id);
+
+        if (result.rowCount < 1){
+            res.status(200).json({
+                status: 200,
+                message: 'No data deleted',
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully deleting data.',
+        });
+
+    } catch (error) {
+        console.error('Controller Error', error.message);
+    }
 }
 
 export { getUsers, getUser, addUser, updateUser, deleteUser };

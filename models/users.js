@@ -38,8 +38,16 @@ async function getUserById(id){
  * @param { string } email 
  * @returns { integer } inserted row id
  */
-function addUser(first_name, last_name, email){
-    return 1;
+async function addUser(first_name, last_name, email){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'INSERT INTO users (first_name, last_name, email) VALUES ($1, $2, $3)',
+            [first_name, last_name, email]
+        );
+        return result;
+    } catch (error) {
+        console.error("Model Error", error.message);
+    }
 }
 
 /**
@@ -50,9 +58,16 @@ function addUser(first_name, last_name, email){
  * @param { string } email 
  * @returns { integer } affected row id
  */
-function updateUser(id, first_name, last_name, email){
-    const filterUser = sampleData.find(user => user.id === id);
-    return filterUser.id;
+async function updateUser(id, first_name, last_name, email){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'UPDATE users SET first_name = $2, last_name = $3, email = $4 WHERE users.id = $1',
+            [id, first_name, last_name, email]
+        );
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message)
+    }
 }
 
 /**
@@ -60,9 +75,16 @@ function updateUser(id, first_name, last_name, email){
  * @param { integer } id 
  * @returns affected row id
  */
-function deleteUser(id){
-    const filterUser = sampleData.find(user => user.id === id);
-    return filterUser.id;
+async function deleteUser(id){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'DELETE FROM users WHERE users.id = $1',
+            [id]
+        );
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message);
+    }
 }
 
 export { getAllUsers, getUserById, addUser, updateUser, deleteUser };
