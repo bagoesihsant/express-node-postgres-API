@@ -16,9 +16,9 @@ router.use(express.json());
 // Routes
 router.get('/', controller.getUsers);
 router.get('/:id', [validators.validateId], controller.getUser);
-router.post('/', controller.addUser);
-router.put('/:id', controller.updateUser);
-router.delete('/:id', controller.deleteUser);
+router.post('/', [validators.validateName, validators.validateEmail], controller.addUser);
+router.put('/:id', [validators.validateId, validators.validateName, validators.validateEmail], controller.updateUser);
+router.delete('/:id', [validators.validateId, validators.validateName, validators.validateEmail], controller.deleteUser);
 
 // Export
 export { router };

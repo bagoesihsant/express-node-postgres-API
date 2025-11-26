@@ -1,5 +1,11 @@
 // Import Modules
 
+/**
+ * Middleware that function to check email by user into request body
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 function validateEmail(req, res, next){
 
     const body = req.body;
