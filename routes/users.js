@@ -4,6 +4,9 @@ import express from 'express';
 // Import Controllers
 import * as controller from '../controllers/users.js';
 
+// Import Validators
+import * as validators from '../middlewares/validators/index.js';
+
 // Constants
 const router = express.Router();
 
@@ -12,7 +15,7 @@ router.use(express.json());
 
 // Routes
 router.get('/', controller.getUsers);
-router.get('/:id', controller.getUser);
+router.get('/:id', [validators.validateId], controller.getUser);
 router.post('/', controller.addUser);
 router.put('/:id', controller.updateUser);
 router.delete('/:id', controller.deleteUser);

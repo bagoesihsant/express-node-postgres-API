@@ -19,6 +19,9 @@ app.use(middleware.accessLog);
 app.use('/users', usersRouter);
 app.use('/posts', postsRouter);
 
+// Error Handler
+app.use(middleware.errorHandler);
+
 // App start
 app.listen(PORT, () => {
     console.log(`Application currently running at port: ${PORT}`);
