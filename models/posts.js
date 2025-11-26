@@ -38,11 +38,11 @@ async function getPostById(id){
  * @param { string } content 
  * @returns { integer } inserted row id
  */
-async function addPost(title, content){
+async function addPost(title, content, user_id){
     try {
         const result = await dbHelper.parameterizedQuery(
-            'INSERT INTO posts (title, content) VALUES ($1, $2)',
-            [title, content]
+            'INSERT INTO posts (title, content, user_id) VALUES ($1, $2, $3)',
+            [title, content, user_id]
         );
         return result;
     } catch (error) {

@@ -73,9 +73,9 @@ async function getPost(req, res, next){
 async function addPost(req, res, next){
     try {
 
-        const { title, content } = req.body;
+        const { title, content, user_id } = req.body;
 
-        const result = await postsModel.addPost(title, content);
+        const result = await postsModel.addPost(title, content, user_id);
 
         if (result.rowCount < 1){
             res.status(200).json({
