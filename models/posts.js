@@ -57,9 +57,16 @@ async function addPost(title, content){
  * @param { string } content 
  * @returns { integer } affected row id
  */
-function updatePost(id, title, content){
-    const filterPost = sampleData.find(post => post.id === id);
-    return filterPost.id;
+async function updatePost(id, title, content){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'UPDATE posts SET title = $2, content = $3 WHERE posts.id = $1',
+            [id, title, content]
+        );
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message);
+    }
 }
 
 /**
@@ -67,9 +74,16 @@ function updatePost(id, title, content){
  * @param { integer } id 
  * @returns { integer } affected row id
  */
-function deletePost(id){
-    const filterPost = sampleData.find(post => post.id === id);
-    return filterPost.id;
+async function deletePost(id){
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'DELETE FROM posts WHERE posts.id = $1',
+            [id]
+        );
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message);
+    }
 }
 
 export { getAllPosts, getPostById, addPost, updatePost, deletePost };

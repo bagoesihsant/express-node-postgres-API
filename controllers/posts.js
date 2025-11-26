@@ -101,10 +101,31 @@ async function addPost(req, res, next){
  * @param {*} res 
  * @param {*} next 
  */
-function updatePost(req, res, next){
-    const { id } = req.params;
-    // TODO : Finish Update
-    res.status(200).send(`Hello World!! PUT! ${id}! Posts!`);
+async function updatePost(req, res, next){
+    try {
+
+        const { id } = req.params;
+
+        const { title, content } = req.body;
+
+        const result = await postsModel.updatePost(id, title, content);
+
+        if (result.rowCount < 1){
+            res.status(200).json({
+                status: 200,
+                message: 'No data updated',
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully updating data.',
+        });
+
+    } catch (error) {
+        console.error('Controller Error', error.message);
+    }
 }
 
 /**
@@ -113,10 +134,28 @@ function updatePost(req, res, next){
  * @param {*} res 
  * @param {*} next 
  */
-function deletePost(req, res, next){
-    const { id } = req.params;
-    // TODO : Finish Delete
-    res.status(200).send(`Hello World! DELETE! ${id}! Posts!`);
+async function deletePost(req, res, next){
+    try {
+        const { id } = req.params;
+
+        const result = await postsModel.deletePost(id);
+
+        if (result.rowCount < 1){
+            res.status(200).json({
+                status: 200,
+                message: 'No data deleted',
+            });
+            return;
+        }
+
+        res.status(200).json({
+            status: 200,
+            message: 'Successfully deleting data.'
+        });
+
+    } catch (error) {
+        console.error('Controller Error', error.message);
+    }
 }
 
 export { getPosts, getPost, addPost, updatePost, deletePost };
