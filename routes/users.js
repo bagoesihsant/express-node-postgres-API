@@ -18,7 +18,7 @@ router.get('/', controller.getUsers);
 router.get('/:id', [validators.validateId], controller.getUser);
 router.post('/', [validators.validateName, validators.validateEmail], controller.addUser);
 router.put('/:id', [validators.validateId, validators.validateName, validators.validateEmail], controller.updateUser);
-router.delete('/:id', [validators.validateId, validators.validateName, validators.validateEmail], controller.deleteUser);
+router.delete('/:id', [validators.validateId], controller.deleteUser);
 
 // Export
 export { router };
