@@ -3,6 +3,9 @@
 // Import Models
 import * as postsModel from '../models/posts.js';
 
+// Import Services
+import * as postsService from '../services/posts.service.js';
+
 /**
  * Get all posts from database
  * @param {*} req 
@@ -11,21 +14,20 @@ import * as postsModel from '../models/posts.js';
  */
 async function getPosts(req, res, next){
     try {
-        const posts = await postsModel.getAllPosts();
+        
+        // 1. Call Service Layer
+        const output = await postsService.getAllPosts();
 
-        if (posts.rowCount < 1) {
-            res.status(200).json({
-                status: 200,
-                message: 'No data found.',
-            });
-            return;
+        // 2. Check Service Layer Output
+        if (output.statusCode == 403){
+            res.status(output.statusCode);
+            next (new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully fetching data.',
-            data: posts.rows,
-        });
+        // 3. If service layer return normally
+        if (output.statusCode == 200){
+            res.status(output.statusCode).json(output);
+        }
 
     } catch (error) {
         console.error('Controller Error', error.message);
@@ -43,21 +45,19 @@ async function getPost(req, res, next){
 
         const { id } = req.params;
 
-        const post = await postsModel.getPostById(id);
+        // 1. Call the service layer
+        const output = await postsService.getPostById(id);
 
-        if (post.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data found.',
-            });
-            return;
+        // 2. Check the service layer output
+        if (output.statusCode === 403) {
+            res.status(output.statusCode);
+            next (new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully fetching data.',
-            data: post.rows,
-        });
+        // 3. If service layer return normally
+        if (output.statusCode === 200) {
+            res.status(output.statusCode).json(output);
+        }
 
     } catch (error) {
         console.error('Controller Error', error.message);
@@ -75,20 +75,19 @@ async function addPost(req, res, next){
 
         const { title, content, user_id } = req.body;
 
-        const result = await postsModel.addPost(title, content, user_id);
+        // 1. Call Service Layer
+        const output = await postsService.createPost(title, content, user_id);
 
-        if (result.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data inserted',
-            });
-            return;
+        // 2. Check Service Layer output
+        if (output.statusCode === 403){
+            res.status(output.statusCode);
+            next(new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully inserting data.',
-        });
+        // 3. If service layer return normally
+        if (output.statusCode === 201){
+            res.status(output.statusCode).json(output);
+        }
 
     } catch (error) {
         console.error('Controller Error', error.message);
@@ -108,20 +107,19 @@ async function updatePost(req, res, next){
 
         const { title, content } = req.body;
 
-        const result = await postsModel.updatePost(id, title, content);
+        // 1. Call Service Layer
+        const output = await postsService.updatePost(title, content, id);
 
-        if (result.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data updated',
-            });
-            return;
+        // 2. Check service layer output
+        if (output.statusCode === 403) {
+            res.status(output.statusCode);
+            next(new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully updating data.',
-        });
+        // 3. If service layer return normally
+        if (output.statusCode === 201){
+            res.status(output.statusCode).json(output);
+        }
 
     } catch (error) {
         console.error('Controller Error', error.message);
@@ -138,20 +136,19 @@ async function deletePost(req, res, next){
     try {
         const { id } = req.params;
 
-        const result = await postsModel.deletePost(id);
+        // 1. Call service layer
+        const output = await postsService.deletePost(id);
 
-        if (result.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data deleted',
-            });
-            return;
+        // 2. Check service layer output
+        if (output.statusCode === 403){
+            res.status(output.statusCode);
+            next(new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully deleting data.'
-        });
+        // 3. If service layer return normally
+        if (output.statusCode === 201){
+            res.status(output.statusCode).json(output);
+        }
 
     } catch (error) {
         console.error('Controller Error', error.message);
