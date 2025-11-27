@@ -30,6 +30,7 @@ async function query(query){
             return result;
         } catch (error) {
             console.error("Query Error", error.message);
+            throw new Error("Query Error");
         } finally {
             // Release Client after finishing query
             await client.release();
@@ -69,6 +70,7 @@ async function parameterizedQuery(query, params){
             return result;
         } catch (error) {
             console.error('Query Error', error.message);
+            throw new Error("Query Error");
         } finally {
             // Release Client after finishing query
             await client.release();

@@ -3,6 +3,9 @@
 // Import Models
 import * as usersModel from '../models/users.js';
 
+// Import Services
+import * as usersService from '../services/users.service.js';
+
 /**
  * Get all users from database
  * @param {*} req 
@@ -11,21 +14,20 @@ import * as usersModel from '../models/users.js';
  */
 async function getUsers(req, res, next){
     try {
-        const users = await usersModel.getAllUsers();
+        
+        // 1. Call Service Layer
+        const output = await usersService.getAllUsers();
 
-        if (users.rowCount < 1) {
-            res.status(200).json({
-                status: 200,
-                message: 'No data found.',
-            });
-            return;
+        // 2. Check Service Layer Output
+        if (output.statusCode === 403) {
+            res.status(403);
+            next(new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully fetching data.',
-            data: users.rows,
-        });
+        // 3. If service Layer return normally
+        if (output.statusCode === 200) {
+            res.status(output.statusCode).json(output);
+        }
 
     } catch (error) {
         console.error('Controller Error', error.message);
@@ -40,23 +42,24 @@ async function getUsers(req, res, next){
  */
 async function getUser(req, res, next){
     try {
+        
         const { id } = req.params;
 
-        const user = await usersModel.getUserById(id);
+        // 1. Call Service Layer
+        const output = await usersService.getUserById(id);
 
-        if (user.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data found.',
-            });
-            return;
+        // 2. Check Service Layer Output
+        if (output.statusCode === 403) {
+            res.status(403);
+            return next(new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully fetching data.',
-            data: user.rows,
-        });
+        // 3. If service layer return normally
+        if (output.statusCode === 200) {
+            res.status(output.statusCode).json(output);
+        }
+
+        console.log('This is a counter measure if something happen');
 
     } catch (error) {
         console.error('Controller Error', error.message);
@@ -74,23 +77,23 @@ async function addUser(req, res, next){
 
         const { first_name, last_name, email } = req.body;
 
-        const result = await usersModel.addUser(first_name, last_name, email);
+        // 1. Call Service Layer
+        const output = await usersService.createUser(first_name, last_name, email);
 
-        if (result.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data inserted',
-            });
-            return;
+        // 2. Check Service Layer Output
+        if (output.statusCode === 403) {
+            res.status(output.statusCode);
+            return next(new Error(output.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully inserting data.',
-        });
-
+        // 3. If service layer return success
+        if (output.statusCode === 201) {
+            res.status(output.statusCode).json(output);
+        }
+        
     } catch (error) {
         console.error('Controller Error', error.message);
+        next(new Error("Controller Error"));
     }
 }
 
@@ -106,20 +109,20 @@ async function updateUser(req, res, next){
 
         const { first_name, last_name, email } = req.body;
 
-        const result = await usersModel.updateUser(id, first_name, last_name, email);
+        // 1. Call Service Layer
+        const result = await usersService.updateUser(id, first_name, last_name, email);
 
-        if (result.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data updated',
-            });
-            return;
+        // 2. Check service layer output
+        if (result.statusCode === 403) {
+            res.status(result.statusCode);
+            return next(new Error(result.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully updating data.',
-        });
+        // 3. If service layer return success
+        if (result.statusCode === 201) {
+            res.status(result.statusCode).json(result);
+        }
+
     } catch (error) {
         console.error('Controller Error', error.message);
     }
@@ -135,20 +138,19 @@ async function deleteUser(req, res, next){
     try {
         const { id } = req.params;
 
-        const result = await usersModel.deleteUser(id);
+        // 1. Call Service Layer
+        const result = await usersService.deleteUser(id);
 
-        if (result.rowCount < 1){
-            res.status(200).json({
-                status: 200,
-                message: 'No data deleted',
-            });
-            return;
+        // 2. Check service layer output
+        if (result.statusCode === 403) {
+            res.status(result.statusCode);
+            return next(new Error(result.message));
         }
 
-        res.status(200).json({
-            status: 200,
-            message: 'Successfully deleting data.',
-        });
+        // 3. If service layer return success
+        if (result.statusCode === 201) {
+            res.status(result.statusCode).json(result);
+        }
 
     } catch (error) {
         console.error('Controller Error', error.message);

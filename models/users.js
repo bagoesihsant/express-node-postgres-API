@@ -47,6 +47,7 @@ async function addUser(first_name, last_name, email){
         return result;
     } catch (error) {
         console.error("Model Error", error.message);
+        throw (new Error("Model Error"));
     }
 }
 
