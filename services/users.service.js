@@ -1,7 +1,7 @@
 // Import Modules
 
 // Import Models
-import * as usersModel from '../models/users.js';
+import * as usersModel from '../models/users.model.js';
 
 async function getAllUsers(){
 

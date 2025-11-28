@@ -2,8 +2,8 @@
 import express from 'express';
 
 // Import Routes
-import { router as usersRouter } from './routes/users.js';
-import { router as postsRouter } from './routes/posts.js';
+import { router as usersRouter } from './routes/users.route.js';
+import { router as postsRouter } from './routes/posts.route.js';
 
 // Import Middlewares
 import * as middleware from './middlewares/index.js';

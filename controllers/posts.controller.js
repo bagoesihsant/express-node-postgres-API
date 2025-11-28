@@ -1,8 +1,5 @@
 // Import Modules
 
-// Import Models
-import * as postsModel from '../models/posts.js';
-
 // Import Services
 import * as postsService from '../services/posts.service.js';
 

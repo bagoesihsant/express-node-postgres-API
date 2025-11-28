@@ -2,7 +2,7 @@
 import express from 'express';
 
 // Import Middlewares
-import * as controller from '../controllers/posts.js';
+import * as controller from '../controllers/posts.controller.js';
 
 // Import Validators
 import * as validators from '../middlewares/validators/index.js';

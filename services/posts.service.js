@@ -1,8 +1,8 @@
 // Import Modules
 
 // Import Models
-import * as postsModel from '../models/posts.js';
-import * as usersModel from '../models/users.js';
+import * as postsModel from '../models/posts.model.js';
+import * as usersModel from '../models/users.model.js';
 
 async function getAllPosts(){
 
