@@ -2,7 +2,7 @@
 import express from 'express';
 
 // Import Controllers
-import * as controller from '../controllers/users.js';
+import * as controller from '../controllers/users.controller.js';
 
 // Import Validators
 import * as validators from '../middlewares/validators/index.js';
