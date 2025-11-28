@@ -88,4 +88,23 @@ async function deleteUser(id){
     }
 }
 
-export { getAllUsers, getUserById, addUser, updateUser, deleteUser };
+/**
+ * Check user information in database useing email
+ * @param { string } email 
+ * @returns 
+ */
+async function checkEmail(email){
+
+    try {
+        const result = await dbHelper.parameterizedQuery(
+            'SELECT * FROM users WHERE users.email LIKE $1',
+            [`%${email}%`]
+        );
+        return result;
+    } catch (error) {
+        console.error('Model Error', error.message);
+    }
+
+}
+
+export { getAllUsers, getUserById, addUser, updateUser, deleteUser, checkEmail };

@@ -102,10 +102,10 @@ async function updatePost(req, res, next){
 
         const { id } = req.params;
 
-        const { title, content } = req.body;
+        const { title, content, user_id } = req.body;
 
         // 1. Call Service Layer
-        const output = await postsService.updatePost(title, content, id);
+        const output = await postsService.updatePost(title, content, id, user_id);
 
         // 2. Check service layer output
         if (output.statusCode === 403) {

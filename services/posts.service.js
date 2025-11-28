@@ -74,27 +74,35 @@ async function createPost(title, content, user_id){
 
 }
 
-async function updatePost(title, content, post_id){
+async function updatePost(title, content, post_id, user_id){
 
     try {
 
-        // 1. Get Post
+        // 1. Check user availability
+        const user = await usersModel.getUserById(user_id);
+
+        // 2. Check if user exists or not
+        if (user.rowCount < 1){
+            return { statusCode: 403, message: 'User not found', output: [] };
+        }
+
+        // 3. If user exists, get post
         const post = await postsModel.getPostById(post_id);
 
-        // 2. Check if post exists
+        // 4. Check if post exists
         if (post.rowCount < 1) {
             return { statusCode: 403, message: 'Post not found.', output: [] };
         }
 
-        // 3. If post exitst
+        // 5. If post exitst
         const output = await postsModel.updatePost(post_id, title, content);
 
-        // 4. Check if post updated
+        // 6. Check if post updated
         if (output.rowCount < 1) {
             return { statusCode: 403, message: 'Failed to update post.', output: [] };
         }
 
-        // 5. If post updated
+        // 7. If post updated
         return { statusCode: 201, message: 'Post updated.', output: { post_id, title, content } };
 
     } catch (error) {

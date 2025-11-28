@@ -49,15 +49,23 @@ async function createUser(first_name, last_name, email) {
 
     try {
 
-        // 1. Insert User data into database with model
+        // 1. Check user email
+        const userEmail = await usersModel.checkEmail(email);
+
+        // 2. If email is found
+        if (userEmail.rowCount > 0) {
+            return { statusCode: 403, message: 'Email already taken.', output: [] };
+        }
+
+        // 3. If email is not found, insert data
         const insertResult = await usersModel.addUser(first_name, last_name, email);
 
-        // 2. Check if User data is inserted
+        // 4. Check if User data is inserted
         if (insertResult.rowCount < 1) {
             return { statusCode: 403, message: 'Failed to create user.', output: [] };
         }
 
-        // 3. If user data is inserted
+        // 5. If user data is inserted
         return { statusCode: 201, message: 'User Created', output: {first_name, last_name, email} };
 
     } catch (error) {
@@ -78,15 +86,25 @@ async function updateUser(id, first_name, last_name, email) {
             return { statusCode: 403, message: 'User not found.', output: [] };
         }
 
-        // 3. If user exists, update it
+        // 3. Fetch Input Email
+        const userEmail = await usersModel.checkEmail(email);
+
+        // 4. If email is found
+        if (userEmail.rowCount > 0) {
+            if (userEmail.rows[0].email !== email) {
+                return { statusCode: 403, message: 'Email already taken.', output: [] };
+            }
+        }
+
+        // 5. If email is not taken, update user data
         const updateResult = await usersModel.updateUser(id, first_name, last_name, email);
 
-        // 4. Check if user update success
+        // 6. Check if user update success
         if (updateResult.rowCount < 1) {
             return { statusCode: 403, message: 'Failed to update user.', output: [] };
         }
 
-        // 5. If user data is updated
+        // 7. If user data is updated
         return { statusCode: 201, message: 'User updated.', output: {first_name, last_name, email} };
 
     } catch (error) {
