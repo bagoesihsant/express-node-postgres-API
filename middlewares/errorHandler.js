@@ -10,8 +10,8 @@
 function errorHandler(err, req, res, next){
     // TODO : Implement further error handler
     
-    res.status(500).json({
-        status: 500,
+    res.status(err.statusCode).json({
+        status: err.statusCode,
         message: err.message,
     });
 }

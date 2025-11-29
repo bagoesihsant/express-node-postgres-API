@@ -3,6 +3,9 @@
 // Import Services
 import * as usersService from '../services/users.service.js';
 
+// Import Errors
+import * as Errors from '../Errors/index.js';
+
 /**
  * Get all users from database
  * @param {*} req 
@@ -16,9 +19,13 @@ async function getUsers(req, res, next){
         const output = await usersService.getAllUsers();
 
         // 2. Check Service Layer Output
-        if (output.statusCode === 403) {
-            res.status(403);
-            next(new Error(output.message));
+        if (output.statusCode === 404){
+            next(new Errors.NotFoundError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service Layer return normally
@@ -28,6 +35,13 @@ async function getUsers(req, res, next){
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500){
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            ));
+        }
     }
 }
 
@@ -46,9 +60,13 @@ async function getUser(req, res, next){
         const output = await usersService.getUserById(id);
 
         // 2. Check Service Layer Output
-        if (output.statusCode === 403) {
-            res.status(403);
-            return next(new Error(output.message));
+        if (output.statusCode === 404){
+            next(new Errors.NotFoundError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return normally
@@ -60,6 +78,13 @@ async function getUser(req, res, next){
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500){
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            ));
+        }
     }
 }
 
@@ -78,9 +103,21 @@ async function addUser(req, res, next){
         const output = await usersService.createUser(first_name, last_name, email);
 
         // 2. Check Service Layer Output
-        if (output.statusCode === 403) {
-            res.status(output.statusCode);
-            return next(new Error(output.message));
+        if (output.statusCode === 409) {
+            next(new Errors.ConflictError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
+        }
+
+        if (output.statusCode === 500){
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                output.statusCode,
+                ''
+            ));
         }
 
         // 3. If service layer return success
@@ -90,7 +127,13 @@ async function addUser(req, res, next){
         
     } catch (error) {
         console.error('Controller Error', error.message);
-        next(new Error("Controller Error"));
+        if (error.statusCode === 500){
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            ));
+        }
     }
 }
 
@@ -110,9 +153,31 @@ async function updateUser(req, res, next){
         const result = await usersService.updateUser(id, first_name, last_name, email);
 
         // 2. Check service layer output
-        if (result.statusCode === 403) {
-            res.status(result.statusCode);
-            return next(new Error(result.message));
+        if (result.statusCode === 404) {
+            next(new Errors.NotFoundError(
+                result.message,
+                result.statusCode,
+                ''
+            ));
+            return;
+        }
+
+        if (result.statusCode === 409) {
+            next(new Errors.ConflictError(
+                result.message,
+                result.statusCode,
+                ''
+            ));
+            return;
+        }
+
+        if (result.statusCode === 500) {
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                result.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return success
@@ -122,6 +187,14 @@ async function updateUser(req, res, next){
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500) {
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            ));
+            return;
+        }
     }
 }
 
@@ -139,9 +212,22 @@ async function deleteUser(req, res, next){
         const result = await usersService.deleteUser(id);
 
         // 2. Check service layer output
-        if (result.statusCode === 403) {
-            res.status(result.statusCode);
-            return next(new Error(result.message));
+        if (result.statusCode === 404) {
+            next(new Errors.NotFoundError(
+                result.message,
+                result.statusCode,
+                ''
+            ));
+            return;
+        }
+
+        if (result.statusCode === 500) {
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                result.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return success
@@ -151,6 +237,14 @@ async function deleteUser(req, res, next){
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500) {
+            next(new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            ));
+            return;
+        }
     }
 }
 
