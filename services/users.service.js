@@ -12,7 +12,7 @@ async function getAllUsers(){
 
         // 2. Check if there's at least one user or not
         if (users.rowCount < 1) {
-            return { statusCode: 403, message: 'No Users found.', output: [] };
+            return { statusCode: 404, message: 'No Users found.', output: [] };
         }
 
         // 3. If there's a tleast one user or more

@@ -4,3 +4,5 @@ class BaseError extends Error {
         this.statusCode = statusCode;
     }
 }
+
+export { BaseError };
