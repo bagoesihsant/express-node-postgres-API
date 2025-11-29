@@ -11,6 +11,11 @@ async function getAllUsers(){
         return result;
     } catch (error) {
         console.error("Model Error", error.message);
+        throw new ServerError(
+            `Fail to execute query with trace: ${error.message}`,
+            500,
+            'Model'
+        );
     }
 }
 
@@ -28,6 +33,11 @@ async function getUserById(id){
         return result;
     } catch (error) {
         console.error("Model Error", error.message);
+        throw new ServerError(
+            `Fail to execute query with trace: ${error.message}`,
+            500,
+            'Model'
+        );
     }
 }
 
@@ -47,7 +57,11 @@ async function addUser(first_name, last_name, email){
         return result;
     } catch (error) {
         console.error("Model Error", error.message);
-        throw (new Error("Model Error"));
+        throw new ServerError(
+            `Fail to execute query with trace: ${error.message}`,
+            500,
+            'Model'
+        );
     }
 }
 
@@ -67,7 +81,12 @@ async function updateUser(id, first_name, last_name, email){
         );
         return result;
     } catch (error) {
-        console.error('Model Error', error.message)
+        console.error('Model Error', error.message);
+        throw new ServerError(
+            `Fail to execute query with trace: ${error.message}`,
+            500,
+            'Model'
+        );
     }
 }
 
@@ -85,6 +104,11 @@ async function deleteUser(id){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
+        throw new ServerError(
+            `Fail to execute query with trace: ${error.message}`,
+            500,
+            'Model'
+        );
     }
 }
 
@@ -103,6 +127,11 @@ async function checkEmail(email){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
+        throw new ServerError(
+            `Fail to execute query with trace: ${error.message}`,
+            500,
+            'Model'
+        );
     }
 
 }
