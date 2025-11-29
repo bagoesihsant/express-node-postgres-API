@@ -4,6 +4,9 @@
 import * as postsModel from '../models/posts.model.js';
 import * as usersModel from '../models/users.model.js';
 
+// Import Errors
+import * as Errors from '../Errors/index.js';
+
 async function getAllPosts(){
 
     try {
@@ -12,7 +15,7 @@ async function getAllPosts(){
 
         // 2. Check if posts is empty or not
         if (posts.rowCount < 1){
-            return { statusCode: 403, message: 'No posts found.', output: [] };
+            return { statusCode: 404, message: 'No posts found.', output: [] };
         }
 
         // 3. If posts is not empty
@@ -20,6 +23,13 @@ async function getAllPosts(){
 
     } catch (error) {
         console.error("Service Error", error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Service Error', 
+                error.statusCode,
+                'Service'
+            );
+        }
     }
 
 }
@@ -33,7 +43,7 @@ async function getPostById(id) {
 
         // 2. Check if post is empty or not
         if (post.rowCount < 1) {
-            return { statusCode: 403, message: 'Post not found.', output: [] };
+            return { statusCode: 404, message: 'Post not found.', output: [] };
         }
 
         // 3. If post is not empty
@@ -41,6 +51,13 @@ async function getPostById(id) {
 
     } catch (error) {
         console.error("Service Error", error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Service Error', 
+                error.statusCode,
+                'Service'
+            );
+        }
     }
 
 }
@@ -54,7 +71,7 @@ async function createPost(title, content, user_id){
 
         // 2. Check if user exists
         if (user.rowCount < 1) {
-            return { statusCode: 403, message: 'User not found.', output: [] };
+            return { statusCode: 404, message: 'User not found.', output: [] };
         }
 
         // 3. If user exists, then add data
@@ -62,7 +79,7 @@ async function createPost(title, content, user_id){
 
         // 4. Check if Post created
         if (output.rowCount < 1) {
-            return { statusCode: 403, message: 'Failed to create post.', output: [] };
+            return { statusCode: 500, message: 'Failed to create post.', output: [] };
         }
 
         // 5. If post created
@@ -70,6 +87,13 @@ async function createPost(title, content, user_id){
 
     } catch (error) {
         console.error("Service Error", error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Service Error', 
+                error.statusCode,
+                'Service'
+            );
+        }
     }
 
 }
@@ -83,7 +107,7 @@ async function updatePost(title, content, post_id, user_id){
 
         // 2. Check if user exists or not
         if (user.rowCount < 1){
-            return { statusCode: 403, message: 'User not found', output: [] };
+            return { statusCode: 404, message: 'User not found', output: [] };
         }
 
         // 3. If user exists, get post
@@ -91,7 +115,7 @@ async function updatePost(title, content, post_id, user_id){
 
         // 4. Check if post exists
         if (post.rowCount < 1) {
-            return { statusCode: 403, message: 'Post not found.', output: [] };
+            return { statusCode: 404, message: 'Post not found.', output: [] };
         }
 
         // 5. If post exitst
@@ -99,14 +123,21 @@ async function updatePost(title, content, post_id, user_id){
 
         // 6. Check if post updated
         if (output.rowCount < 1) {
-            return { statusCode: 403, message: 'Failed to update post.', output: [] };
+            return { statusCode: 500, message: 'Failed to update post.', output: [] };
         }
 
         // 7. If post updated
-        return { statusCode: 201, message: 'Post updated.', output: { post_id, title, content } };
+        return { statusCode: 200, message: 'Post updated.', output: { post_id, title, content } };
 
     } catch (error) {
         console.error("Service Error", error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Service Error', 
+                error.statusCode,
+                'Service'
+            );
+        }
     }
 
 }
@@ -120,7 +151,7 @@ async function deletePost(post_id){
 
         // 2. Check if post exists
         if (post.rowCount < 1){
-            return { statusCode: 403, message: 'Post not found.', output: [] };
+            return { statusCode: 404, message: 'Post not found.', output: [] };
         }
 
         // 3. If post exists
@@ -128,14 +159,21 @@ async function deletePost(post_id){
 
         // 4. Check if post is deleted
         if (output.rowCount < 1){
-            return { statusCode: 403, message: 'Failed to delete post.', output: [] };
+            return { statusCode: 500, message: 'Failed to delete post.', output: [] };
         }
 
         // 5. If post is deleted
-        return { statusCode: 201, message: 'Post deleted', output: post.rows }
+        return { statusCode: 200, message: 'Post deleted', output: post.rows }
 
     } catch (error) {
         console.error("Service Error", error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Service Error', 
+                error.statusCode,
+                'Service'
+            );
+        }
     }
 
 }

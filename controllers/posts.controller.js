@@ -3,6 +3,9 @@
 // Import Services
 import * as postsService from '../services/posts.service.js';
 
+// Import Errors
+import * as Errors from '../Errors/index.js';
+
 /**
  * Get all posts from database
  * @param {*} req 
@@ -16,9 +19,13 @@ async function getPosts(req, res, next){
         const output = await postsService.getAllPosts();
 
         // 2. Check Service Layer Output
-        if (output.statusCode == 403){
-            res.status(output.statusCode);
-            next (new Error(output.message));
+        if (output.statusCode == 404){
+            next(new Errors.NotFoundError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return normally
@@ -28,6 +35,13 @@ async function getPosts(req, res, next){
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            );
+        }
     }
 }
 
@@ -46,9 +60,13 @@ async function getPost(req, res, next){
         const output = await postsService.getPostById(id);
 
         // 2. Check the service layer output
-        if (output.statusCode === 403) {
-            res.status(output.statusCode);
-            next (new Error(output.message));
+        if (output.statusCode === 404) {
+            next(new Errors.NotFoundError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return normally
@@ -58,6 +76,13 @@ async function getPost(req, res, next){
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            );
+        }
     }
 }
 
@@ -76,9 +101,22 @@ async function addPost(req, res, next){
         const output = await postsService.createPost(title, content, user_id);
 
         // 2. Check Service Layer output
-        if (output.statusCode === 403){
-            res.status(output.statusCode);
-            next(new Error(output.message));
+        if (output.statusCode === 404){
+            next(new Errors.NotFoundError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
+        }
+
+        if (output.statusCode === 500){
+            next(new Errors.ServerError(
+                'Something went wrong on our end',
+                output.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return normally
@@ -88,6 +126,13 @@ async function addPost(req, res, next){
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            );
+        }
     }
 }
 
@@ -108,18 +153,38 @@ async function updatePost(req, res, next){
         const output = await postsService.updatePost(title, content, id, user_id);
 
         // 2. Check service layer output
-        if (output.statusCode === 403) {
-            res.status(output.statusCode);
-            next(new Error(output.message));
+        if (output.statusCode === 404) {
+            next(new Errors.NotFoundError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
+        }
+
+        if (output.statusCode === 500){
+            next(new Errors.ServerError(
+                'Something went wrong on our end',
+                output.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return normally
-        if (output.statusCode === 201){
+        if (output.statusCode === 200){
             res.status(output.statusCode).json(output);
         }
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            );
+        }
     }
 }
 
@@ -137,18 +202,38 @@ async function deletePost(req, res, next){
         const output = await postsService.deletePost(id);
 
         // 2. Check service layer output
-        if (output.statusCode === 403){
-            res.status(output.statusCode);
-            next(new Error(output.message));
+        if (output.statusCode === 404){
+            next(new Errors.NotFoundError(
+                output.message,
+                output.statusCode,
+                ''
+            ));
+            return;
+        }
+
+        if (output.statusCode === 500){
+            next(new Errors.ServerError(
+                'Something went wrong on our end',
+                output.statusCode,
+                ''
+            ));
+            return;
         }
 
         // 3. If service layer return normally
-        if (output.statusCode === 201){
+        if (output.statusCode === 200){
             res.status(output.statusCode).json(output);
         }
 
     } catch (error) {
         console.error('Controller Error', error.message);
+        if (error.statusCode === 500){
+            throw new Errors.ServerError(
+                'Something went wrong on our end.',
+                error.statusCode,
+                ''
+            );
+        }
     }
 }
 
