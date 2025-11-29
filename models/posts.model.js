@@ -1,6 +1,8 @@
 // Import Modules
 import * as dbHelper from '../databases/helper.js';
 
+// Import Errors
+import * as Errors from '../Errors/index.js';
 
 /**
  * Get all posts data from database
@@ -12,7 +14,7 @@ async function getAllPosts(){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -34,7 +36,7 @@ async function getPostById(id){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -57,7 +59,7 @@ async function addPost(title, content, user_id){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -81,7 +83,7 @@ async function updatePost(id, title, content){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -103,7 +105,7 @@ async function deletePost(id){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'

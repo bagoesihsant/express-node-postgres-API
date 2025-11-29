@@ -1,6 +1,9 @@
 // Import Modules
 import * as dbHelper from '../databases/helper.js';
 
+// Import Errors
+import * as Errors from '../Errors/index.js';
+
 /**
  * Get all users data from database
  * @returns { JSON } arrays of objects containing users data
@@ -11,7 +14,7 @@ async function getAllUsers(){
         return result;
     } catch (error) {
         console.error("Model Error", error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -33,7 +36,7 @@ async function getUserById(id){
         return result;
     } catch (error) {
         console.error("Model Error", error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -57,7 +60,7 @@ async function addUser(first_name, last_name, email){
         return result;
     } catch (error) {
         console.error("Model Error", error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -82,7 +85,7 @@ async function updateUser(id, first_name, last_name, email){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -104,7 +107,7 @@ async function deleteUser(id){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
@@ -127,7 +130,7 @@ async function checkEmail(email){
         return result;
     } catch (error) {
         console.error('Model Error', error.message);
-        throw new ServerError(
+        throw new Errors.ServerError(
             `Fail to execute query with trace: ${error.message}`,
             500,
             'Model'
